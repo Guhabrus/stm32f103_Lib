@@ -33,7 +33,7 @@ typedef enum
  */
 flrslt_t flesh_unlocking();
 
-
+void printf_stm32(uint8_t val);
 /**
  * @brief Сброс flesh памяти
  * 

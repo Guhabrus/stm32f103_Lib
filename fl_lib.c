@@ -7,6 +7,7 @@
 #include "stm32f103xb.h"
 
 #include "fl_lib.h"
+#include <string.h>
 
 #define STM_FLESH_KEY1 FLASH_KEY1
 #define STM_FLESH_KEY2 FLASH_KEY2
@@ -35,21 +36,35 @@ flrslt_t flesh_write(uint32_t addr, uint16_t* data, size_t size)
 	if(MAX_FLASH_ADDR < (FLASH_OFFSET + addr) || MIN_FLASH_ADDR > (FLASH_OFFSET + addr) || addr & 1){
 		return BAD_INPUT;
 	}
-
+	
 	if(!flash_available()){
 		return FLESH_BLOCK;
 	}
-
+	
 	if(check_lock()){
 		return FLESH_BLOCK;
 	}
 
+	
 	FLASH->CR |= FLASH_CR_PG;
-	uint32_t end = addr + size;
 
-	for(; addr < end; addr += 2, data++)
+	uint8_t tmp_buff[FLASH_PG_SIZE] = {0};
+
+	uint8_t num_page = (addr / FLASH_PG_SIZE);
+
+	uint32_t addr_pg = MIN_FLASH_ADDR + num_page* FLASH_PG_SIZE;
+
+	flesh_read(addr_pg - MIN_FLASH_ADDR  , (uint16_t*)tmp_buff, FLASH_PG_SIZE);
+
+	flesh_page_erase(num_page);
+
+	memcpy((uint8_t*)(tmp_buff+ (MIN_FLASH_ADDR + addr - addr_pg)), data, size);
+
+	uint16_t* addr_tmp = (uint16_t*)addr_pg;
+
+	for(uint16_t* indx = (uint16_t*)tmp_buff; indx < (uint16_t*)(tmp_buff + FLASH_PG_SIZE); indx++,addr_tmp++)
 	{
-		*((uint16_t*)(FLASH_OFFSET + addr)) = *data;
+		*addr_tmp = (*indx);
 
 		if(check_lock()){
 			return TIME_ERROR;
@@ -62,7 +77,7 @@ flrslt_t flesh_write(uint32_t addr, uint16_t* data, size_t size)
 
 flrslt_t flesh_read(uint32_t addr, uint16_t* data, size_t size)
 {
-	if(MAX_FLASH_ADDR < (FLASH_OFFSET + addr) || MIN_FLASH_ADDR > (FLASH_OFFSET + addr)|| addr & 1){
+	if(MAX_FLASH_ADDR < (FLASH_OFFSET + addr) || MIN_FLASH_ADDR > (FLASH_OFFSET + addr) || addr & 1){
 		return BAD_INPUT;
 	}
 
