@@ -19,7 +19,7 @@ typedef void (*hadler_t)(void);
  */
 typedef struct
 {
-	uint8_t _x;					///< Номер таймера
+	TIM_TypeDef* _TIMx;			///< Номер таймера
 	uint8_t _mode;				///< Режим работы таймера (0 - down\ 1 - up\ 2 - up-down)
 	uint16_t _prclr;			///< значение делителя
 	uint16_t _cnt;				///<
@@ -45,7 +45,7 @@ uint8_t set_interapt(uint32_t time);
  *  @brief Остановить работу таймера
  *  @param [in] timX - Номер TIM
  */
-uint8_t stop_interapt(uint8_t timX);
+void stop_interapt(TIM_TypeDef* _TIMx);
 
 
 
