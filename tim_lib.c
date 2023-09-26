@@ -58,3 +58,45 @@ void stop_interapt(TIM_TypeDef* _TIMx)
 		_TIMx->DIER &= (~TIM_DIER_UIE);
 }
 
+
+uint8_t init_timX_mcrsc(timX_mcrsc_t* tim_stng)
+{
+	if(tim_stng->_time > 0xffff){	//TODO убрать данный костыль
+		return 1;
+	}
+
+	timX_t tim = {
+		._TIMx 		= tim_stng->_TIMx,
+		._mode 		= tim_stng->_mode,
+		._handler 	= tim_stng->_handler,
+		._priority 	= tim_stng->_priority,
+		._arr		= tim_stng->_time,
+		._prclr		= SystemCoreClock/ 1000000 -1
+
+	};
+
+	return init_timX(&tim);
+}
+
+uint8_t init_timX_ms(timX_mcrsc_t* tim_stng)
+{
+	if(tim_stng->_time > 0xffff){	//TODO убрать данный костыль
+			return 1;
+		}
+
+		timX_t tim = {
+			._TIMx 		= tim_stng->_TIMx,
+			._mode 		= tim_stng->_mode,
+			._handler 	= tim_stng->_handler,
+			._priority 	= tim_stng->_priority,
+			._arr		= tim_stng->_time,
+			._prclr		= (SystemCoreClock/1000) -1
+
+		};
+
+		return init_timX(&tim);
+}
+
+
+
+
