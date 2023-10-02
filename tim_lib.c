@@ -7,15 +7,16 @@
 
 #include <stddef.h>
 #include "stm32f103xb.h"
+
 #include <tim_lib.h>
 
 hadler_t user_handler = NULL;
 
 
-void TIM1_UP_TIM10_IRQHandler(void)
+extern void TIM1_10_UP_IRQHandler(void)
 {
 
-	if(NULL != user_handler && TIM1->SR & TIM_SR_UIF) //TODO уйти от конкретного TIM
+	if(NULL != user_handler) //TODO уйти от конкретного TIM
 	{
 		user_handler();
 		TIM1->SR &= ~TIM_SR_UIF;
@@ -42,7 +43,7 @@ uint8_t init_timX(timX_t *tim_stng)
 	NVIC_SetPriority(TIM1_UP_TIM10_IRQn, tim_stng->_priority);
 
 	user_handler = tim_stng->_handler;
-	//TODO остальные настройки и самому считать делитель
+
 	tim_stng->_TIMx->DIER |= TIM_DIER_UIE;
 
 	tim_stng->_TIMx->CR1 |= TIM_CR1_CEN;
@@ -59,7 +60,7 @@ void stop_interapt(TIM_TypeDef* _TIMx)
 }
 
 
-uint8_t init_timX_mcrsc(timX_mcrsc_t* tim_stng)
+uint8_t init_timX_mcrsc(timX_time_t* tim_stng)
 {
 	if(tim_stng->_time > 0xffff){	//TODO убрать данный костыль
 		return 1;
@@ -71,14 +72,14 @@ uint8_t init_timX_mcrsc(timX_mcrsc_t* tim_stng)
 		._handler 	= tim_stng->_handler,
 		._priority 	= tim_stng->_priority,
 		._arr		= tim_stng->_time,
-		._prclr		= SystemCoreClock/ 1000000 -1
+		._prclr		= (SYSTEM_CORE_CLOCK/ 1000000) -1
 
 	};
 
 	return init_timX(&tim);
 }
 
-uint8_t init_timX_ms(timX_mcrsc_t* tim_stng)
+uint8_t init_timX_ms(timX_time_t* tim_stng)
 {
 	if(tim_stng->_time > 0xffff){	//TODO убрать данный костыль
 			return 1;
@@ -90,7 +91,7 @@ uint8_t init_timX_ms(timX_mcrsc_t* tim_stng)
 			._handler 	= tim_stng->_handler,
 			._priority 	= tim_stng->_priority,
 			._arr		= tim_stng->_time,
-			._prclr		= (SystemCoreClock/1000) -1
+			._prclr		= (SYSTEM_CORE_CLOCK/1000) -1
 
 		};
 
