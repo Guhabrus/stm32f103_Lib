@@ -14,9 +14,11 @@ uart_res_t uart_init(uart_init_t* _init_sntg)
 		return U_BAD_INPUT;
 	}
 
-	memcpy((uint8_t*)USART1->CR1, (uint8_t*)&_init_sntg->cr1_t, 2);
-	memcpy((uint8_t*)USART1->CR2, (uint8_t*)&_init_sntg->cr2_t, 2);
-	memcpy((uint8_t*)USART1->CR3, (uint8_t*)&_init_sntg->cr3_t, 2);
+	memcpy((uint8_t*)USART1->CR1, (uint8_t*)&_init_sntg->cr1_t, sizeof(_init_sntg->cr1_t));
+	memcpy((uint8_t*)USART1->CR2, (uint8_t*)&_init_sntg->cr2_t, sizeof(_init_sntg->cr1_t));
+	memcpy((uint8_t*)USART1->CR3, (uint8_t*)&_init_sntg->cr3_t, sizeof(_init_sntg->cr1_t));
+
+	USART1->BRR |= (uint32_t)(_init_sntg->_system_clock/_init_sntg->_buad_rate*16);
 
 	return U_SUCCES;
 }

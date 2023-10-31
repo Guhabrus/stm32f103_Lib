@@ -30,54 +30,57 @@ typedef struct
 {
 	struct
 	{
-		uint16_t ue:1;
-		uint16_t word_len:1;
-		uint16_t wake_m:1;
-		uint16_t pce:1;
-		uint16_t ps:1;
-		uint16_t peie:1;
-		uint16_t txeie:1;
-		uint16_t tcie:1;
-		uint16_t rxneie:1;
-		uint16_t idleie:1;
-		uint16_t te:1;
-		uint16_t re:1;
-		uint16_t rwu:1;
-		uint16_t sbk:1;
-		uint16_t :2;
+		uint32_t sbk:1;
+		uint32_t rwu:1;
+		uint32_t re:1;
+		uint32_t te:1;
+		uint32_t idleie:1;
+		uint32_t rxneie:1;
+		uint32_t tcie:1;
+		uint32_t txeie:1;
+		uint32_t peie:1;
+		uint32_t ps:1;
+		uint32_t pce:1;
+		uint32_t wake_m:1;
+		uint32_t word_len:1;
+		uint32_t ue:1;
+		uint32_t :18;
 	}cr1_t;
 
 	struct
 	{
-		uint16_t linen:1;
-		uint16_t stop:1;
-		uint16_t clken:1;
-		uint16_t cpol:1;
-		uint16_t cpha:1;
-		uint16_t lbcl:1;
-		uint16_t lbdie:1;
-		uint16_t lbdl:1;
-		uint16_t add:3;
-		uint16_t :5;
+		uint32_t add:4;
+		uint32_t :1;
+		uint32_t lbdl:1;
+		uint32_t lbdie:1;
+		uint32_t :1;
+		uint32_t lbcl:1;
+		uint32_t cpha:1;
+		uint32_t cpol:1;
+		uint32_t clken:1;
+		uint32_t stop:2;
+		uint32_t linen:1;
+		uint32_t :17;
 	}cr2_t;
 
 	struct
 	{
-		uint16_t ctsie:1;
-		uint16_t ctse:1;
-		uint16_t rtse:1;
-		uint16_t dmat:1;
-		uint16_t dmar:1;
-		uint16_t scen:1;
-		uint16_t nack:1;
-		uint16_t hdsel:1;
-		uint16_t irpl:1;
-		uint16_t iren:1;
-		uint16_t eie:1;
-
+		uint32_t eie:1;
+		uint32_t iren:1;
+		uint32_t irpl:1;
+		uint32_t hdsel:1;
+		uint32_t nack:1;
+		uint32_t scen:1;
+		uint32_t dmar:1;
+		uint32_t dmat:1;
+		uint32_t rtse:1;
+		uint32_t ctse:1;
+		uint32_t ctsie:1;
+		uint32_t :21;
 	}cr3_t;
 
-	uint32_t speed;
+	uint32_t _buad_rate;
+	uint32_t _system_clock;
 
 }*uart_init_pt, uart_init_t;
 
