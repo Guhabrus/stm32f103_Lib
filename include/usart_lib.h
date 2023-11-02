@@ -5,8 +5,8 @@
  *      Author: Максим
  */
 
-#ifndef INC_UART_LIB_H_
-#define INC_UART_LIB_H_
+#ifndef INC_USART_LIB_H_
+#define INC_USART_LIB_H_
 
 #include <stdint.h>
 #include <stddef.h>
@@ -14,17 +14,17 @@
 
 #pragma pack(push,1)
 
-typedef uint8_t uart_data;
+typedef uint8_t usart_data;
 
 typedef enum
 {
 	U_SUCCES,				///< Процедура успешная
 	U_TIME_ERROR,			///< Ошибка таймаута
-	U_UART_BLOCK,		///< Доступ к uart заблокирован
+	U_USART_BLOCK,		///< Доступ к usart заблокирован
 	U_BAD_INPUT,
 	U_UNKNOWN
 
-}uart_res_t;
+}usart_res_t;
 
 typedef struct
 {
@@ -82,25 +82,25 @@ typedef struct
 	uint32_t _buad_rate;
 	uint32_t _system_clock;
 
-}*uart_init_pt, uart_init_t;
+}*usart_init_pt, usart_init_t;
 
 //TODO
 typedef struct
 {
 	uint16_t error;
-}*uart_error_pt,uart_error_t ;
+}*usart_error_pt,usart_error_t ;
 
 #pragma pack(pop)
 
-uart_res_t uart_init(uart_init_t* _init_sntg);
+usart_res_t usart_init(usart_init_t* _init_sntg);
 
-uart_res_t uart_send(uart_data* _data_pt, size_t _size);
+usart_res_t usart_send(usart_data* _data_pt, size_t _size);
 
-uart_res_t uart_read(uart_data* _data_pt, size_t _size);
+usart_res_t usart_read(usart_data* _data_pt, size_t _size);
 
 // 0 - если данных нет, 1 - если данные есть
-bool uart_empty();
+bool usart_empty();
 
-void uart_error(uart_error_t* uart_error);
+void usart_error(usart_error_t* usart_error);
 
-#endif /* INC_UART_LIB_H_ */
+#endif /* INC_USART_LIB_H_ */
